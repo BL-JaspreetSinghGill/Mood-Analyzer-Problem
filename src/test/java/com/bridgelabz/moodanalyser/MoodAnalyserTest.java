@@ -3,7 +3,6 @@ package com.bridgelabz.moodanalyser;
 import com.bridgelabz.moodanalyser.exceptions.MoodAnalysisException;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class MoodAnalyserTest {
 
@@ -39,12 +38,9 @@ public class MoodAnalyserTest {
     public void givenMessageInConstructor_WhenNull_ShouldThrowMoodAnalysisException() {
         try {
             MoodAnalyser moodAnalyser = new MoodAnalyser(null);
-            ExpectedException expectedException = ExpectedException.none();
-            expectedException.expect(MoodAnalysisException.class);
             String mood = moodAnalyser.analyseMood();
-            Assert.assertEquals("HAPPY", mood);
         } catch (MoodAnalysisException e) {
-            e.printStackTrace();
+            Assert.assertEquals("Please enter valid message", e.getMessage());
         }
     }
 }
