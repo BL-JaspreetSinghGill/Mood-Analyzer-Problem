@@ -1,5 +1,6 @@
 package com.bridgelabz.moodanalyser;
 
+import com.bridgelabz.moodanalyser.com.bridgelabz.moodanalyser.enums.ExceptionType;
 import com.bridgelabz.moodanalyser.exceptions.MoodAnalysisException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,7 +41,17 @@ public class MoodAnalyserTest {
             MoodAnalyser moodAnalyser = new MoodAnalyser(null);
             String mood = moodAnalyser.analyseMood();
         } catch (MoodAnalysisException e) {
-            Assert.assertEquals("Please enter valid message", e.getMessage());
+            Assert.assertEquals(ExceptionType.ENTERED_NULL, e.exceptionType);
+        }
+    }
+
+    @Test
+    public void givenMessageInConstructor_WhenEmpty_ShouldThrowMoodAnalysisException() {
+        try {
+            MoodAnalyser moodAnalyser = new MoodAnalyser("");
+            String mood = moodAnalyser.analyseMood();
+        } catch (MoodAnalysisException e) {
+            Assert.assertEquals(ExceptionType.ENTERED_EMPTY, e.exceptionType);
         }
     }
 }
