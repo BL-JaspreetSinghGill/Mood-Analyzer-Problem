@@ -1,5 +1,7 @@
 package com.bridgelabz.moodanalyser;
 
+import com.bridgelabz.moodanalyser.exceptions.MoodAnalysisException;
+
 public class MoodAnalyser {
 
     private String message;
@@ -23,7 +25,7 @@ public class MoodAnalyser {
                 return "HAPPY";
             }
         } catch (NullPointerException e) {
-            return "HAPPY";
+            throw new MoodAnalysisException("Please enter valid message");
         }
     }
 }
