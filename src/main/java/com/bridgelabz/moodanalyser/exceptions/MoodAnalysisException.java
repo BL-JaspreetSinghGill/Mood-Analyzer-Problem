@@ -6,6 +6,10 @@ public class MoodAnalysisException extends RuntimeException {
 
     public ExceptionType exceptionType;
 
+    public MoodAnalysisException(String message) {
+        super(message);
+    }
+
     public MoodAnalysisException(ExceptionType exceptionType, String message) {
         super(message);
         this.exceptionType = exceptionType;
