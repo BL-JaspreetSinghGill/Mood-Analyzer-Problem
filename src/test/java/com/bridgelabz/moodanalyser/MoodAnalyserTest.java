@@ -39,7 +39,7 @@ public class MoodAnalyserTest {
     public void givenMessageInConstructor_WhenNull_ShouldThrowMoodAnalysisException() {
         try {
             MoodAnalyser moodAnalyser = new MoodAnalyser(null);
-            String mood = moodAnalyser.analyseMood();
+            moodAnalyser.analyseMood();
         } catch (MoodAnalysisException e) {
             Assert.assertEquals(ExceptionType.ENTERED_NULL, e.exceptionType);
         }
@@ -49,9 +49,15 @@ public class MoodAnalyserTest {
     public void givenMessageInConstructor_WhenEmpty_ShouldThrowMoodAnalysisException() {
         try {
             MoodAnalyser moodAnalyser = new MoodAnalyser("");
-            String mood = moodAnalyser.analyseMood();
+            moodAnalyser.analyseMood();
         } catch (MoodAnalysisException e) {
             Assert.assertEquals(ExceptionType.ENTERED_EMPTY, e.exceptionType);
         }
+    }
+
+    @Test
+    public void givenMoodAnalyserClass_WhenProper_ShouldReturnObject() {
+        MoodAnalyser moodAnalyser = MoodAnalyserFactory.createObject();
+        Assert.assertEquals(new MoodAnalyser("I am in Happy mood"), moodAnalyser);
     }
 }
