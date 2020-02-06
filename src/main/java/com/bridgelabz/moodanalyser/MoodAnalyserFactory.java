@@ -12,18 +12,11 @@ public class MoodAnalyserFactory {
         if (!isValidClassName) {
             throw new MoodAnalysisException("No Such Class Error");
         }
-        MoodAnalyser moodAnalyser = null;
-        try {
-            Class<?> moodAnalyserClass = Class.forName(className);
-            Constructor<?> moodConstructor = moodAnalyserClass.getConstructor(String.class);
-            Object instanceObject = moodConstructor.newInstance("I am in Happy mood");
-            moodAnalyser = (MoodAnalyser) instanceObject;
-            return moodAnalyser;
-        } catch (ClassNotFoundException | NoSuchMethodException |
-                InstantiationException | IllegalAccessException |
-                InvocationTargetException e) {
-            e.printStackTrace();
-        }
+
+        Class<?> classObject = getClassObject(className);
+        Constructor<?> constructorObject = getConstructorObject(classObject);
+        Object instanceObject = getInstance(constructorObject);
+        MoodAnalyser moodAnalyser = (MoodAnalyser) instanceObject;
         return moodAnalyser;
     }
 
@@ -32,5 +25,36 @@ public class MoodAnalyserFactory {
             return true;
         }
         return false;
+    }
+
+    public static Class<?> getClassObject(String className) {
+        Class<?> classObject = null;
+        try {
+            classObject = Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return classObject;
+    }
+
+    public static Constructor<?> getConstructorObject(Class<?> classObject) {
+        Constructor<?> constructorObject = null;
+        try {
+            constructorObject = classObject.getConstructor(String.class);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return constructorObject;
+    }
+
+    public static Object getInstance(Constructor<?> constructorObject) {
+        Object instanceObject = null;
+        try {
+            instanceObject = constructorObject.newInstance("I am in Happy mood");
+        } catch (InstantiationException | IllegalAccessException |
+                InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return instanceObject;
     }
 }
