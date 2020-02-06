@@ -7,14 +7,14 @@ import java.lang.reflect.InvocationTargetException;
 
 public class MoodAnalyserFactory {
 
-    public static MoodAnalyser createObject(String className) {
+    public static MoodAnalyser createObject(String className, Class<?> constructorParamType) {
         boolean isValidClassName = checkValidClassName(className);
         if (!isValidClassName) {
             throw new MoodAnalysisException("No Such Class Error");
         }
 
         Class<?> classObject = getClassObject(className);
-        Constructor<?> constructorObject = getConstructorObject(classObject);
+        Constructor<?> constructorObject = getConstructorObject(classObject, constructorParamType);
         Object instanceObject = getInstance(constructorObject);
         MoodAnalyser moodAnalyser = (MoodAnalyser) instanceObject;
         return moodAnalyser;
@@ -37,12 +37,12 @@ public class MoodAnalyserFactory {
         return classObject;
     }
 
-    public static Constructor<?> getConstructorObject(Class<?> classObject) {
+    public static Constructor<?> getConstructorObject(Class<?> classObject, Class<?> constructorParamType) {
         Constructor<?> constructorObject = null;
         try {
-            constructorObject = classObject.getConstructor(String.class);
+            constructorObject = classObject.getConstructor(constructorParamType);
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            throw new MoodAnalysisException("No Such Method Error");
         }
         return constructorObject;
     }
