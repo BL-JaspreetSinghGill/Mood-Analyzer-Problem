@@ -62,7 +62,7 @@ public class MoodAnalyserTest {
     }
 
     @Test
-    public void givenMoodAnalyserClass_WhenImproper_ShouldThrowMoodAnalysisException() {
+    public void givenClassName_WhenImproper_ShouldThrowMoodAnalysisException() {
         try {
             MoodAnalyser moodAnalyser = MoodAnalyserFactory.createObject("");
         } catch (MoodAnalysisException e) {
