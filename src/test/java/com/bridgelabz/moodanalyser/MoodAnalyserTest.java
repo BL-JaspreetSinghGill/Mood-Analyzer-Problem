@@ -6,6 +6,8 @@ import com.bridgelabz.moodanalyser.exceptions.MoodAnalysisException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.lang.reflect.Method;
+
 public class MoodAnalyserTest {
 
     @Test
@@ -59,7 +61,7 @@ public class MoodAnalyserTest {
     // DEFAULT CONSTRUCTOR
     @Test
     public void givenMoodAnalyserClass_WhenProperWithUseOfDefaultConstr_ShouldReturnObject() {
-        MoodAnalyser moodAnalyser = MoodAnalyserFactory.createObject("com.bridgelabz.moodanalyser.MoodAnalyser", null, ConstructorType.DEFAULT, "message", "I am in Happy mood");
+        MoodAnalyser moodAnalyser = ObjectReflector.createObject("com.bridgelabz.moodanalyser.MoodAnalyser", null, ConstructorType.DEFAULT, "message", "I am in Happy mood");
         Assert.assertEquals(new MoodAnalyser("I am in Happy mood"), moodAnalyser);
     }
 
@@ -67,7 +69,7 @@ public class MoodAnalyserTest {
     @Test
     public void givenClassName_WhenImproper_ShouldThrowMoodAnalysisException() {
         try {
-            MoodAnalyserFactory.createObject("", null, ConstructorType.DEFAULT, null,null);
+            ObjectReflector.createObject("", null, ConstructorType.DEFAULT, null,null);
         } catch (MoodAnalysisException e) {
             Assert.assertEquals("No Such Class Error", e.getMessage());
         }
@@ -77,7 +79,7 @@ public class MoodAnalyserTest {
     @Test
     public void givenClassName_WhenProperWithImproperConstr_ShouldThrowMoodAnalysisException() {
         try {
-            MoodAnalyserFactory.createObject("com.bridgelabz.moodanalyser.MoodAnalyser", Integer.class, ConstructorType.DEFAULT, null,null);
+            ObjectReflector.createObject("com.bridgelabz.moodanalyser.MoodAnalyser", Integer.class, ConstructorType.DEFAULT, null,null);
         } catch (MoodAnalysisException e) {
             Assert.assertEquals("No Such Method Error", e.getMessage());
         }
@@ -86,7 +88,15 @@ public class MoodAnalyserTest {
     // PARAMETERIZED CONSTRUCTOR
     @Test
     public void givenMoodAnalyserClass_WhenProperWithUseOfParaConstr_ShouldReturnObject() {
-        MoodAnalyser moodAnalyser = MoodAnalyserFactory.createObject("com.bridgelabz.moodanalyser.MoodAnalyser", String.class, ConstructorType.PARAMETERIZED, null, "I am in Happy mood");
+        MoodAnalyser moodAnalyser = ObjectReflector.createObject("com.bridgelabz.moodanalyser.MoodAnalyser", String.class, ConstructorType.PARAMETERIZED, null, "I am in Happy mood");
         Assert.assertEquals(new MoodAnalyser("I am in Happy mood"), moodAnalyser);
+    }
+
+    @Test
+    public void givenHappyMessage_WhenProper_ShouldReturnHappyMood() {
+        MoodAnalyser moodAnalyser = ObjectReflector.createObject("com.bridgelabz.moodanalyser.MoodAnalyser", String.class, ConstructorType.PARAMETERIZED, null, "I am in Happy mood");
+        Method method = ObjectReflector.getMethod("com.bridgelabz.moodanalyser.MoodAnalyser", "analyseMood");
+        Object object = ObjectReflector.invokeMethod(moodAnalyser, method);
+        Assert.assertEquals(object.toString(), "HAPPY");
     }
 }

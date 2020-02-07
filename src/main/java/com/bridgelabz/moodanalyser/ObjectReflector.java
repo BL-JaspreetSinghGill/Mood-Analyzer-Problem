@@ -6,8 +6,9 @@ import com.bridgelabz.moodanalyser.exceptions.MoodAnalysisException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
-public class MoodAnalyserFactory {
+public class ObjectReflector {
 
     public static MoodAnalyser createObject(String className, Class<?> constructorParamType, ConstructorType constructorType, String attributeName, String message) {
         Class<?> classObject = getClassObject(className);
@@ -15,9 +16,33 @@ public class MoodAnalyserFactory {
         Object instanceObject = getInstance(constructorObject, constructorType, message);
         MoodAnalyser moodAnalyser = (MoodAnalyser) instanceObject;
         if (constructorType.toString().equals(ConstructorType.DEFAULT.toString())) {
-            getField(classObject, attributeName, message, moodAnalyser);
+            setField(classObject, attributeName, message, moodAnalyser);
         }
         return moodAnalyser;
+    }
+
+    public static Method getMethod(String className, String methodName) {
+        Method method = null;
+        Class<?> classObject = getClassObject(className);
+        try {
+            method  = classObject.getMethod(methodName);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return method;
+    }
+
+    public static Object invokeMethod(Object object, Method method) {
+        Object obj = null;
+        MoodAnalyser moodAnalyser = (MoodAnalyser) object;
+        try {
+            obj= method.invoke(moodAnalyser);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return obj;
     }
 
     private static Class<?> getClassObject(String className) {
@@ -59,7 +84,7 @@ public class MoodAnalyserFactory {
         return instanceObject;
     }
 
-    private static void getField(Class<?> classObject, String attributeName, String value, Object object) {
+    private static void setField(Class<?> classObject, String attributeName, String value, Object object) {
         try {
             Field fieldName = classObject.getDeclaredField(attributeName);
             fieldName.setAccessible(true);
