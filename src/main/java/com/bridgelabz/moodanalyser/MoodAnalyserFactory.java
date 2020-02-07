@@ -3,6 +3,7 @@ package com.bridgelabz.moodanalyser;
 import com.bridgelabz.moodanalyser.exceptions.MoodAnalysisException;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
 public class MoodAnalyserFactory {
@@ -17,17 +18,18 @@ public class MoodAnalyserFactory {
         Constructor<?> constructorObject = getConstructorObject(classObject, constructorParamType);
         Object instanceObject = getInstance(constructorObject);
         MoodAnalyser moodAnalyser = (MoodAnalyser) instanceObject;
+        getField(classObject, "message", "I am in Happy mood", moodAnalyser);
         return moodAnalyser;
     }
 
-    public static boolean checkValidClassName(String className) {
+    private static boolean checkValidClassName(String className) {
         if (className.equals("com.bridgelabz.moodanalyser.MoodAnalyser")) {
             return true;
         }
         return false;
     }
 
-    public static Class<?> getClassObject(String className) {
+    private static Class<?> getClassObject(String className) {
         Class<?> classObject = null;
         try {
             classObject = Class.forName(className);
@@ -37,24 +39,39 @@ public class MoodAnalyserFactory {
         return classObject;
     }
 
-    public static Constructor<?> getConstructorObject(Class<?> classObject, Class<?> constructorParamType) {
+    private static Constructor<?> getConstructorObject(Class<?> classObject, Class<?> constructorParamType) {
         Constructor<?> constructorObject = null;
         try {
-            constructorObject = classObject.getConstructor(constructorParamType);
+            if (constructorParamType == null) {
+                constructorObject = classObject.getConstructor();
+            } else {
+                constructorObject = classObject.getConstructor(constructorParamType);
+            }
         } catch (NoSuchMethodException e) {
             throw new MoodAnalysisException("No Such Method Error");
         }
         return constructorObject;
     }
 
-    public static Object getInstance(Constructor<?> constructorObject) {
+    private static Object getInstance(Constructor<?> constructorObject) {
         Object instanceObject = null;
         try {
-            instanceObject = constructorObject.newInstance("I am in Happy mood");
+            instanceObject = constructorObject.newInstance();
         } catch (InstantiationException | IllegalAccessException |
                 InvocationTargetException e) {
             e.printStackTrace();
         }
         return instanceObject;
+    }
+
+    private static void getField(Class<?> classObject, String name, String value, Object object) {
+        try {
+            Field fieldName = classObject.getDeclaredField(name);
+            fieldName.setAccessible(true);
+            MoodAnalyser modMoodAnalyser = (MoodAnalyser) object;
+            fieldName.set(modMoodAnalyser, value);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 }

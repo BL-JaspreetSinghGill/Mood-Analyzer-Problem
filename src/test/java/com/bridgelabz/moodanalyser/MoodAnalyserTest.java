@@ -55,25 +55,28 @@ public class MoodAnalyserTest {
         }
     }
 
+    // DEFAULT CONSTRUCTOR
     @Test
-    public void givenMoodAnalyserClass_WhenProper_ShouldReturnObject() {
-        MoodAnalyser moodAnalyser = MoodAnalyserFactory.createObject("com.bridgelabz.moodanalyser.MoodAnalyser", String.class);
+    public void givenMoodAnalyserClass_WhenProperWithUseOfDefaultConstr_ShouldReturnObject() {
+        MoodAnalyser moodAnalyser = MoodAnalyserFactory.createObject("com.bridgelabz.moodanalyser.MoodAnalyser", null);
         Assert.assertEquals(new MoodAnalyser("I am in Happy mood"), moodAnalyser);
     }
 
+    // DEFAULT CONSTRUCTOR
     @Test
     public void givenClassName_WhenImproper_ShouldThrowMoodAnalysisException() {
         try {
-            MoodAnalyser moodAnalyser = MoodAnalyserFactory.createObject("", String.class);
+            MoodAnalyserFactory.createObject("", null);
         } catch (MoodAnalysisException e) {
             Assert.assertEquals("No Such Class Error", e.getMessage());
         }
     }
 
+    // DEFAULT CONSTRUCTOR
     @Test
     public void givenClassName_WhenProperWithImproperConstr_ShouldThrowMoodAnalysisException() {
         try {
-            MoodAnalyser moodAnalyser = MoodAnalyserFactory.createObject("com.bridgelabz.moodanalyser.MoodAnalyser", Integer.class);
+            MoodAnalyserFactory.createObject("com.bridgelabz.moodanalyser.MoodAnalyser", Integer.class);
         } catch (MoodAnalysisException e) {
             Assert.assertEquals("No Such Method Error", e.getMessage());
         }
