@@ -99,4 +99,14 @@ public class MoodAnalyserTest {
         Object object = ObjectReflector.invokeMethod(moodAnalyser, method);
         Assert.assertEquals(object.toString(), "HAPPY");
     }
+
+    @Test
+    public void givenMethodName_WhenImproper_ShouldThrowMoodAnalysisException() {
+        try {
+            ObjectReflector.createObject("com.bridgelabz.moodanalyser.MoodAnalyser", String.class, ConstructorType.PARAMETERIZED, null, "I am in Happy mood");
+            ObjectReflector.getMethod("com.bridgelabz.moodanalyser.MoodAnalyser", "analyseMoody");
+        } catch (MoodAnalysisException e) {
+            Assert.assertEquals("No Such Method Error", e.getMessage());
+        }
+    }
 }

@@ -27,7 +27,7 @@ public class ObjectReflector {
         try {
             method  = classObject.getMethod(methodName);
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            throw new MoodAnalysisException("No Such Method Error");
         }
         return method;
     }
