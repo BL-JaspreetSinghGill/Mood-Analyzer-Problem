@@ -86,6 +86,9 @@ public class ObjectReflector {
 
     private static void setField(Class<?> classObject, String attributeName, String value, Object object) {
         try {
+            if (value == null) {
+                throw new MoodAnalysisException("Please enter valid message");
+            }
             Field fieldName = classObject.getDeclaredField(attributeName);
             fieldName.setAccessible(true);
             MoodAnalyser modMoodAnalyser = (MoodAnalyser) object;

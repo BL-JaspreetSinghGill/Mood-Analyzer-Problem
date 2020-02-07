@@ -130,4 +130,14 @@ public class MoodAnalyserTest {
             Assert.assertEquals("No Such Field error", e.getMessage());
         }
     }
+
+    // DEFAULT CONSTRUCTOR
+    @Test
+    public void givenMessageInField_WhenNull_ShouldThrowMoodAnalysisException() {
+        try {
+            ObjectReflector.createObject("com.bridgelabz.moodanalyser.MoodAnalyser", null, ConstructorType.DEFAULT, "message", null);
+        } catch (MoodAnalysisException e) {
+            Assert.assertEquals(e.getMessage(), "Please enter valid message");
+        }
+    }
 }
