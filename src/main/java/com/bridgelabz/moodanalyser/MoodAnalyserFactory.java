@@ -1,5 +1,6 @@
 package com.bridgelabz.moodanalyser;
 
+import com.bridgelabz.moodanalyser.com.bridgelabz.moodanalyser.enums.ConstructorType;
 import com.bridgelabz.moodanalyser.exceptions.MoodAnalysisException;
 
 import java.lang.reflect.Constructor;
@@ -8,7 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public class MoodAnalyserFactory {
 
-    public static MoodAnalyser createObject(String className, Class<?> constructorParamType) {
+    public static MoodAnalyser createObject(String className, Class<?> constructorParamType, ConstructorType constructorType) {
         boolean isValidClassName = checkValidClassName(className);
         if (!isValidClassName) {
             throw new MoodAnalysisException("No Such Class Error");
@@ -16,9 +17,11 @@ public class MoodAnalyserFactory {
 
         Class<?> classObject = getClassObject(className);
         Constructor<?> constructorObject = getConstructorObject(classObject, constructorParamType);
-        Object instanceObject = getInstance(constructorObject);
+        Object instanceObject = getInstance(constructorObject, constructorType);
         MoodAnalyser moodAnalyser = (MoodAnalyser) instanceObject;
-        getField(classObject, "message", "I am in Happy mood", moodAnalyser);
+        if (constructorType.toString().equals(ConstructorType.DEFAULT.toString())) {
+            getField(classObject, "message", "I am in Happy mood", moodAnalyser);
+        }
         return moodAnalyser;
     }
 
@@ -53,10 +56,14 @@ public class MoodAnalyserFactory {
         return constructorObject;
     }
 
-    private static Object getInstance(Constructor<?> constructorObject) {
+    private static Object getInstance(Constructor<?> constructorObject, ConstructorType constructorType) {
         Object instanceObject = null;
         try {
-            instanceObject = constructorObject.newInstance();
+            if (constructorType.toString().equals(ConstructorType.DEFAULT.toString())) {
+                instanceObject = constructorObject.newInstance();
+            } else {
+                instanceObject = constructorObject.newInstance("I am in Happy mood");
+            }
         } catch (InstantiationException | IllegalAccessException |
                 InvocationTargetException e) {
             e.printStackTrace();
