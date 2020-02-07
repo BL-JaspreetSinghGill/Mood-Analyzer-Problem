@@ -59,7 +59,7 @@ public class MoodAnalyserTest {
     // DEFAULT CONSTRUCTOR
     @Test
     public void givenMoodAnalyserClass_WhenProperWithUseOfDefaultConstr_ShouldReturnObject() {
-        MoodAnalyser moodAnalyser = MoodAnalyserFactory.createObject("com.bridgelabz.moodanalyser.MoodAnalyser", null, ConstructorType.DEFAULT);
+        MoodAnalyser moodAnalyser = MoodAnalyserFactory.createObject("com.bridgelabz.moodanalyser.MoodAnalyser", null, ConstructorType.DEFAULT, "message", "I am in Happy mood");
         Assert.assertEquals(new MoodAnalyser("I am in Happy mood"), moodAnalyser);
     }
 
@@ -67,7 +67,7 @@ public class MoodAnalyserTest {
     @Test
     public void givenClassName_WhenImproper_ShouldThrowMoodAnalysisException() {
         try {
-            MoodAnalyserFactory.createObject("", null, ConstructorType.DEFAULT);
+            MoodAnalyserFactory.createObject("", null, ConstructorType.DEFAULT, null,null);
         } catch (MoodAnalysisException e) {
             Assert.assertEquals("No Such Class Error", e.getMessage());
         }
@@ -77,7 +77,7 @@ public class MoodAnalyserTest {
     @Test
     public void givenClassName_WhenProperWithImproperConstr_ShouldThrowMoodAnalysisException() {
         try {
-            MoodAnalyserFactory.createObject("com.bridgelabz.moodanalyser.MoodAnalyser", Integer.class, ConstructorType.DEFAULT);
+            MoodAnalyserFactory.createObject("com.bridgelabz.moodanalyser.MoodAnalyser", Integer.class, ConstructorType.DEFAULT, null,null);
         } catch (MoodAnalysisException e) {
             Assert.assertEquals("No Such Method Error", e.getMessage());
         }
@@ -86,7 +86,7 @@ public class MoodAnalyserTest {
     // PARAMETERIZED CONSTRUCTOR
     @Test
     public void givenMoodAnalyserClass_WhenProperWithUseOfParaConstr_ShouldReturnObject() {
-        MoodAnalyser moodAnalyser = MoodAnalyserFactory.createObject("com.bridgelabz.moodanalyser.MoodAnalyser", String.class, ConstructorType.PARAMETERIZED);
+        MoodAnalyser moodAnalyser = MoodAnalyserFactory.createObject("com.bridgelabz.moodanalyser.MoodAnalyser", String.class, ConstructorType.PARAMETERIZED, null, "I am in Happy mood");
         Assert.assertEquals(new MoodAnalyser("I am in Happy mood"), moodAnalyser);
     }
 }

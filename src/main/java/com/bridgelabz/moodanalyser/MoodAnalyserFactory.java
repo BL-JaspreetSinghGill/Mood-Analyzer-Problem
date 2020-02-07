@@ -9,27 +9,15 @@ import java.lang.reflect.InvocationTargetException;
 
 public class MoodAnalyserFactory {
 
-    public static MoodAnalyser createObject(String className, Class<?> constructorParamType, ConstructorType constructorType) {
-        boolean isValidClassName = checkValidClassName(className);
-        if (!isValidClassName) {
-            throw new MoodAnalysisException("No Such Class Error");
-        }
-
+    public static MoodAnalyser createObject(String className, Class<?> constructorParamType, ConstructorType constructorType, String attributeName, String message) {
         Class<?> classObject = getClassObject(className);
         Constructor<?> constructorObject = getConstructorObject(classObject, constructorParamType);
-        Object instanceObject = getInstance(constructorObject, constructorType);
+        Object instanceObject = getInstance(constructorObject, constructorType, message);
         MoodAnalyser moodAnalyser = (MoodAnalyser) instanceObject;
         if (constructorType.toString().equals(ConstructorType.DEFAULT.toString())) {
-            getField(classObject, "message", "I am in Happy mood", moodAnalyser);
+            getField(classObject, attributeName, message, moodAnalyser);
         }
         return moodAnalyser;
-    }
-
-    private static boolean checkValidClassName(String className) {
-        if (className.equals("com.bridgelabz.moodanalyser.MoodAnalyser")) {
-            return true;
-        }
-        return false;
     }
 
     private static Class<?> getClassObject(String className) {
@@ -37,7 +25,7 @@ public class MoodAnalyserFactory {
         try {
             classObject = Class.forName(className);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            throw new MoodAnalysisException("No Such Class Error");
         }
         return classObject;
     }
@@ -56,13 +44,13 @@ public class MoodAnalyserFactory {
         return constructorObject;
     }
 
-    private static Object getInstance(Constructor<?> constructorObject, ConstructorType constructorType) {
+    private static Object getInstance(Constructor<?> constructorObject, ConstructorType constructorType, String message) {
         Object instanceObject = null;
         try {
             if (constructorType.toString().equals(ConstructorType.DEFAULT.toString())) {
                 instanceObject = constructorObject.newInstance();
             } else {
-                instanceObject = constructorObject.newInstance("I am in Happy mood");
+                instanceObject = constructorObject.newInstance(message);
             }
         } catch (InstantiationException | IllegalAccessException |
                 InvocationTargetException e) {
@@ -71,9 +59,9 @@ public class MoodAnalyserFactory {
         return instanceObject;
     }
 
-    private static void getField(Class<?> classObject, String name, String value, Object object) {
+    private static void getField(Class<?> classObject, String attributeName, String value, Object object) {
         try {
-            Field fieldName = classObject.getDeclaredField(name);
+            Field fieldName = classObject.getDeclaredField(attributeName);
             fieldName.setAccessible(true);
             MoodAnalyser modMoodAnalyser = (MoodAnalyser) object;
             fieldName.set(modMoodAnalyser, value);
