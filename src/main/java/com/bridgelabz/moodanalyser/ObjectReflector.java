@@ -91,7 +91,7 @@ public class ObjectReflector {
             MoodAnalyser modMoodAnalyser = (MoodAnalyser) object;
             fieldName.set(modMoodAnalyser, value);
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
+            throw new MoodAnalysisException("No Such Field error");
         }
     }
 }

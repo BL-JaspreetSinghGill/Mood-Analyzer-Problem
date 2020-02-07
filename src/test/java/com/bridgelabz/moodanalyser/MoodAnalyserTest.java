@@ -114,10 +114,20 @@ public class MoodAnalyserTest {
 
     // DEFAULT CONSTRUCTOR
     @Test
-    public void givenHappyMessageInFieldDynamically_WhenProper_ShouldReturnHappyMood() {
+    public void givenHappyMessageInField_WhenProper_ShouldReturnHappyMood() {
         MoodAnalyser moodAnalyser = ObjectReflector.createObject("com.bridgelabz.moodanalyser.MoodAnalyser", null, ConstructorType.DEFAULT, "message", "I am in Happy mood");
         Method method = ObjectReflector.getMethod("com.bridgelabz.moodanalyser.MoodAnalyser", "analyseMood");
         Object object = ObjectReflector.invokeMethod(moodAnalyser, method);
         Assert.assertEquals(object.toString(), "HAPPY");
+    }
+
+    // DEFAULT CONSTRUCTOR
+    @Test
+    public void givenHappyMessageInField_WhenImproper_ShouldThrowMoodAnalysisException() {
+        try {
+            ObjectReflector.createObject("com.bridgelabz.moodanalyser.MoodAnalyser", null, ConstructorType.DEFAULT, "messages", "I am in Happy mood");
+        } catch (MoodAnalysisException e) {
+            Assert.assertEquals("No Such Field error", e.getMessage());
+        }
     }
 }
