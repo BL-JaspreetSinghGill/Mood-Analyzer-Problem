@@ -92,6 +92,7 @@ public class MoodAnalyserTest {
         Assert.assertEquals(new MoodAnalyser("I am in Happy mood"), moodAnalyser);
     }
 
+    // PARAMETERIZED CONSTRUCTOR
     @Test
     public void givenHappyMessage_WhenProper_ShouldReturnHappyMood() {
         MoodAnalyser moodAnalyser = ObjectReflector.createObject("com.bridgelabz.moodanalyser.MoodAnalyser", String.class, ConstructorType.PARAMETERIZED, null, "I am in Happy mood");
@@ -100,6 +101,7 @@ public class MoodAnalyserTest {
         Assert.assertEquals(object.toString(), "HAPPY");
     }
 
+    // PARAMETERIZED CONSTRUCTOR
     @Test
     public void givenMethodName_WhenImproper_ShouldThrowMoodAnalysisException() {
         try {
@@ -108,5 +110,14 @@ public class MoodAnalyserTest {
         } catch (MoodAnalysisException e) {
             Assert.assertEquals("No Such Method Error", e.getMessage());
         }
+    }
+
+    // DEFAULT CONSTRUCTOR
+    @Test
+    public void givenHappyMessageInFieldDynamically_WhenProper_ShouldReturnHappyMood() {
+        MoodAnalyser moodAnalyser = ObjectReflector.createObject("com.bridgelabz.moodanalyser.MoodAnalyser", null, ConstructorType.DEFAULT, "message", "I am in Happy mood");
+        Method method = ObjectReflector.getMethod("com.bridgelabz.moodanalyser.MoodAnalyser", "analyseMood");
+        Object object = ObjectReflector.invokeMethod(moodAnalyser, method);
+        Assert.assertEquals(object.toString(), "HAPPY");
     }
 }
