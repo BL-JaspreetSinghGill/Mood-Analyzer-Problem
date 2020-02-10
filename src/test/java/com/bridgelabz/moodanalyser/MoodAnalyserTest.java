@@ -3,6 +3,7 @@ package com.bridgelabz.moodanalyser;
 import com.bridgelabz.moodanalyser.com.bridgelabz.moodanalyser.enums.ConstructorType;
 import com.bridgelabz.moodanalyser.com.bridgelabz.moodanalyser.enums.ExceptionType;
 import com.bridgelabz.moodanalyser.exceptions.MoodAnalysisException;
+import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -140,4 +141,16 @@ public class MoodAnalyserTest {
             Assert.assertEquals(e.getMessage(), "Please enter valid message");
         }
     }
+
+    @Test
+    public void givenMoodMessage_ShouldReturnMessage() {
+        MoodAnalyser moodAnalyser = new MoodAnalyser("Testing my mood");
+        try {
+            moodAnalyser.analyseMood();
+        } catch (MoodAnalysisException e) {
+        }
+        String dump = ObjectReflector.dump(moodAnalyser, 0);
+        Assert.assertThat(dump, CoreMatchers.containsString("Testing my mood"));
+    }
+
 }

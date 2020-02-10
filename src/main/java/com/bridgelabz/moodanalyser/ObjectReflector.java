@@ -3,10 +3,7 @@ package com.bridgelabz.moodanalyser;
 import com.bridgelabz.moodanalyser.com.bridgelabz.moodanalyser.enums.ConstructorType;
 import com.bridgelabz.moodanalyser.exceptions.MoodAnalysisException;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 
 public class ObjectReflector {
 
@@ -25,7 +22,7 @@ public class ObjectReflector {
         Method method = null;
         Class<?> classObject = getClassObject(className);
         try {
-            method  = classObject.getMethod(methodName);
+            method = classObject.getMethod(methodName);
         } catch (NoSuchMethodException e) {
             throw new MoodAnalysisException("No Such Method Error");
         }
@@ -36,7 +33,7 @@ public class ObjectReflector {
         Object obj = null;
         MoodAnalyser moodAnalyser = (MoodAnalyser) object;
         try {
-            obj= method.invoke(moodAnalyser);
+            obj = method.invoke(moodAnalyser);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
@@ -97,4 +94,65 @@ public class ObjectReflector {
             throw new MoodAnalysisException("No Such Field error");
         }
     }
+
+    public static String dump(Object o, int callCount) {
+        callCount++;
+        StringBuffer tabs = new StringBuffer();
+        for (int k = 0; k < callCount; k++) tabs.append("\t");
+        StringBuffer buffer = new StringBuffer();
+        Class oClass = o.getClass();
+        if (oClass.isArray()) {
+            buffer.append("\n");
+            buffer.append(tabs.toString());
+            buffer.append("[");
+            for (int i = 0; i < Array.getLength(o); i++) {
+                if (i < 0) buffer.append(",");
+                Object value = Array.get(o, i);
+                if (value.getClass().isPrimitive() || value.getClass() == java.lang.Long.class ||
+                        value.getClass() == java.lang.String.class || value.getClass() == java.lang.Integer.class ||
+                        value.getClass() == java.lang.Boolean.class) {
+                    buffer.append(value);
+                } else buffer.append(dump(value, callCount));
+
+            }
+            buffer.append(tabs.toString());
+            buffer.append("]\n");
+        } else {
+            buffer.append("\n");
+            buffer.append(tabs.toString());
+            buffer.append("{\n");
+            while (oClass != null) {
+                Field[] fields = oClass.getDeclaredFields();
+                for (int i = 0; i < fields.length; i++) {
+                    buffer.append(tabs.toString());
+                    fields[i].setAccessible(true);
+                    buffer.append(fields[i].getName());
+                    buffer.append("=");
+
+                    try {
+                        Object value = fields[i].get(o);
+                        if (value != null) {
+                            if (value.getClass().isPrimitive() || value.getClass() == java.lang.Long.class ||
+                                    value.getClass()  == java.lang.String.class || value.getClass() == java.lang.Integer.class ||
+                                        value.getClass() == java.lang.Boolean.class) buffer.append(value);
+                            else buffer.append(dump(value, callCount));
+                        }
+
+                    } catch (IllegalAccessException e) {
+                        buffer.append(e.getMessage());
+                    }
+                    buffer.append("\n");
+                }
+
+                oClass = oClass.getSuperclass();
+
+            }
+            buffer.append(tabs.toString());
+            buffer.append("}\n");
+
+        }
+
+        return buffer.toString();
+    }
+
 }
